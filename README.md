@@ -1,4 +1,4 @@
-# keycloak-sms-authenticator-sns
+# keycloak-sms-authenticator-sns (Keycloak v3.4.3.Final)
 
 To install the SMS Authenticator one has to:
 
