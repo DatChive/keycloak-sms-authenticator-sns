@@ -1,18 +1,21 @@
 package six.six.keycloak.requiredaction;
 
+import static six.six.keycloak.authenticator.KeycloakSmsAuthenticatorUtil.validateTelephoneNumber;
+
+import com.amazonaws.util.StringUtils;
+
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.authentication.RequiredActionProvider;
 import org.keycloak.models.UserModel;
 
-import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-import static six.six.keycloak.authenticator.KeycloakSmsAuthenticatorUtil.validateTelephoneNumber;
+import javax.ws.rs.core.Response;
 
 /**
- * Created by nickpack on 15/08/2017.
+ * Created by DatChive on 04/04/2018
  */
 public class KeycloakSmsMobilenumberRequiredAction implements RequiredActionProvider {
     private static Logger logger = Logger.getLogger(KeycloakSmsMobilenumberRequiredAction.class);
@@ -50,16 +53,16 @@ public class KeycloakSmsMobilenumberRequiredAction implements RequiredActionProv
 
         String answer = (context.getHttpRequest().getDecodedFormParameters().getFirst("mobile_number"));
         String answer2 = (context.getHttpRequest().getDecodedFormParameters().getFirst("mobile_number_confirm"));
-        if (answer != null && answer.length() > 0 && answer.equals(answer2) && validateTelephoneNumber(answer)) {
+        if (!StringUtils.isNullOrEmpty(answer) && answer.equals(answer2) && validateTelephoneNumber(answer)) {
             logger.debug("Valid matching mobile numbers supplied, save credential ...");
-            List<String> mobileNumber = new ArrayList<String>();
+            List<String> mobileNumber = new ArrayList<>();
             mobileNumber.add(answer);
 
             UserModel user = context.getUser();
             user.setAttribute("mobile_number", mobileNumber);
 
             context.success();
-        } else if (answer != null && answer2 !=null && !answer.equals(answer2)) {
+        } else if (answer != null && answer2 != null && !answer.equals(answer2)) {
             logger.debug("Supplied mobile number values do not match...");
             Response challenge = context.form()
                     .setError("Entered mobile numbers do not match.")
