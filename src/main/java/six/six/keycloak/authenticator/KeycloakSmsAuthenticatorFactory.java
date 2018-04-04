@@ -10,28 +10,27 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.provider.ProviderConfigProperty;
 
-import javax.ws.rs.HttpMethod;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-
 /**
- * Created by joris on 11/11/2016.
+ * Created by DatChive on 04/04/2018
  */
 public class KeycloakSmsAuthenticatorFactory implements AuthenticatorFactory, ConfigurableAuthenticatorFactory {
 
     public static final String PROVIDER_ID = "sms-authentication";
 
-    private static Logger logger = Logger.getLogger(KeycloakSmsAuthenticatorFactory.class);
+    private static final Logger logger = Logger.getLogger(KeycloakSmsAuthenticatorFactory.class);
     private static final KeycloakSmsAuthenticator SINGLETON = new KeycloakSmsAuthenticator();
-
 
     public static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = {
             AuthenticationExecutionModel.Requirement.REQUIRED,
             AuthenticationExecutionModel.Requirement.OPTIONAL,
-            AuthenticationExecutionModel.Requirement.DISABLED};
+            AuthenticationExecutionModel.Requirement.DISABLED
+    };
 
-    private static final List<ProviderConfigProperty> configProperties = new ArrayList<ProviderConfigProperty>();
+    private static final List<ProviderConfigProperty> configProperties = new ArrayList<>();
 
     static {
         ProviderConfigProperty property;
@@ -56,7 +55,8 @@ public class KeycloakSmsAuthenticatorFactory implements AuthenticatorFactory, Co
         property.setName(KeycloakSmsAuthenticatorConstants.CONF_PRP_SMS_TEXT);
         property.setLabel("Template of text to send to the user");
         property.setType(ProviderConfigProperty.STRING_TYPE);
-        property.setHelpText("Use %sms-code% as placeholder for the generated SMS code. Use %user% and %password% as placeholder when 'In message' authentication is used.");
+        property.setHelpText(
+                "Use %sms-code% as placeholder for the generated SMS code. Use %user% and %password% as placeholder when 'In message' authentication is used.");
         configProperties.add(property);
 
         // SMS Gateway
@@ -86,9 +86,8 @@ public class KeycloakSmsAuthenticatorFactory implements AuthenticatorFactory, Co
         return SINGLETON;
     }
 
-
     public AuthenticationExecutionModel.Requirement[] getRequirementChoices() {
-        logger.debug("getRequirementChoices called ... returning " + REQUIREMENT_CHOICES);
+        logger.debug("getRequirementChoices called ... returning " + Arrays.toString(REQUIREMENT_CHOICES));
         return REQUIREMENT_CHOICES;
     }
 
