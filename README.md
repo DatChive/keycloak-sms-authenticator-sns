@@ -1,5 +1,5 @@
-# keycloak-sms-authenticator-sns (Keycloak v3.4.3.Final)
-## US Telephone Numbers
+# keycloak-sms-authenticator-sns (Keycloak v3.4.3.Final, US Telephone Numbers)
+
 To install the SMS Authenticator one has to:
 
 * Add the jar to the Keycloak server:
