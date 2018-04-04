@@ -1,19 +1,18 @@
 package six.six.keycloak.authenticator;
 
 import com.amazonaws.services.sns.model.PublishResult;
+
 import org.jboss.logging.Logger;
 import org.keycloak.models.AuthenticatorConfigModel;
 import org.keycloak.models.UserModel;
+
 import six.six.aws.snsclient.SnsNotificationService;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Random;
 
 /**
- * Created by joris on 18/11/2016.
+ * Created by DatChive on 04/04/2018
  */
 public class KeycloakSmsAuthenticatorUtil {
 
@@ -75,15 +74,10 @@ public class KeycloakSmsAuthenticatorUtil {
     }
 
     public static String setDefaultCountryCodeIfZero(String mobileNumber) {
-        if (mobileNumber.startsWith("07")) {
-            mobileNumber = "+44" + mobileNumber.substring(1);
-        }
-
-        return mobileNumber;
+        return mobileNumber.startsWith("07") ? "+44" + mobileNumber.substring(1) : mobileNumber;
     }
 
     static boolean sendSmsCode(String mobileNumber, String code, AuthenticatorConfigModel config) {
-        // Send an SMS
         KeycloakSmsAuthenticatorUtil.logger.debug("Sending " + code + "  to mobileNumber " + mobileNumber);
 
         String smsUsr = getConfigString(config, KeycloakSmsAuthenticatorConstants.CONF_PRP_SMS_CLIENTTOKEN);
@@ -93,8 +87,7 @@ public class KeycloakSmsAuthenticatorUtil {
         try {
             PublishResult send_result = new SnsNotificationService().send(setDefaultCountryCodeIfZero(mobileNumber), smsText, smsUsr, smsPwd);
             return true;
-       } catch(Exception e) {
-            //Just like pokemon
+        } catch (Exception e) {
             return false;
         }
     }
@@ -111,6 +104,9 @@ public class KeycloakSmsAuthenticatorUtil {
     }
 
     public static boolean validateTelephoneNumber(String telephoneNumber) {
-        return telephoneNumber.matches("^(?:(?:\\(?(?:0(?:0|11)\\)?[\\s-]?\\(?|\\+)44\\)?[\\s-]?(?:\\(?0\\)?[\\s-]?)?)|(?:\\(?0))(?:(?:\\d{5}\\)?[\\s-]?\\d{4,5})|(?:\\d{4}\\)?[\\s-]?(?:\\d{5}|\\d{3}[\\s-]?\\d{3}))|(?:\\d{3}\\)?[\\s-]?\\d{3}[\\s-]?\\d{3,4})|(?:\\d{2}\\)?[\\s-]?\\d{4}[\\s-]?\\d{4}))(?:[\\s-]?(?:x|ext\\.?|\\#)\\d{3,4})?$");
+        return telephoneNumber.matches(
+                "^(?:(?:\\(?(?:0(?:0|11)\\)?[\\s-]?\\(?|\\+)44\\)?[\\s-]?(?:\\(?0\\)?[\\s-]?)?)|(?:\\(?0))(?:(?:\\d{5}\\)?[\\s-]?\\d{4,5})|(?:\\d{4}\\)"
+                        + "?[\\s-]?(?:\\d{5}|\\d{3}[\\s-]?\\d{3}))|(?:\\d{3}\\)?[\\s-]?\\d{3}[\\s-]?\\d{3,4})|(?:\\d{2}\\)?[\\s-]?\\d{4}[\\s-]?\\d{4}))"
+                        + "(?:[\\s-]?(?:x|ext\\.?|\\#)\\d{3,4})?$");
     }
 }

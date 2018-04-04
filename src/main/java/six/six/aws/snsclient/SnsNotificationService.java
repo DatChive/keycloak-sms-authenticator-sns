@@ -8,12 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by nickpack on 09/08/2017.
+ * Created by DatChive on 04/04/2018
  */
 public class SnsNotificationService {
 
     public PublishResult send(String phoneNumber, String message, String clientToken, String clientSecret) {
-        Map<String, MessageAttributeValue> smsAttributes = new HashMap<String, MessageAttributeValue>();
+        Map<String, MessageAttributeValue> smsAttributes = new HashMap<>();
         smsAttributes.put("AWS.SNS.SMS.SenderID", new MessageAttributeValue()
                 .withStringValue("HomeOffice")
                 .withDataType("String"));
