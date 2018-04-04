@@ -14,6 +14,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <keycloak.version>3.4.3.Final</keycloak.version>
+        <aws.version>1.11.308</aws.version>
     </properties>
     <build>
         <plugins>
@@ -83,7 +84,7 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-sns</artifactId>
-            <version>1.11.173</version>
+            <version>${aws.version}</version>
         </dependency>
     </dependencies>
 </project>

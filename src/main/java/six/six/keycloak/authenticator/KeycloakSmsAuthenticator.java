@@ -1,5 +1,7 @@
 package six.six.keycloak.authenticator;
 
+import com.amazonaws.util.CollectionUtils;
+
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
@@ -40,11 +42,7 @@ public class KeycloakSmsAuthenticator implements Authenticator {
 
         List<String> mobileNumberCreds = user.getAttribute("mobile_number");
 
-        String mobileNumber = null;
-
-        if (mobileNumberCreds != null && !mobileNumberCreds.isEmpty()) {
-            mobileNumber = mobileNumberCreds.get(0);
-        }
+        String mobileNumber = !CollectionUtils.isNullOrEmpty(mobileNumberCreds) ? mobileNumberCreds.get(0) : null;
 
         if (mobileNumber != null) {
             // The mobile number is configured --> send an SMS
@@ -52,11 +50,9 @@ public class KeycloakSmsAuthenticator implements Authenticator {
             logger.debug("Using nrOfDigits " + nrOfDigits);
 
             long ttl = KeycloakSmsAuthenticatorUtil.getConfigLong(config, KeycloakSmsAuthenticatorConstants.CONF_PRP_SMS_CODE_TTL, 10 * 60L); // 10 minutes in s
-
             logger.debug("Using ttl " + ttl + " (s)");
 
             String code = KeycloakSmsAuthenticatorUtil.getSmsCode(nrOfDigits);
-
             storeSMSCode(context, code, new Date().getTime() + (ttl * 1000)); // s --> ms
             if (KeycloakSmsAuthenticatorUtil.sendSmsCode(mobileNumber, code, context.getAuthenticatorConfig())) {
                 Response challenge = context.form().createForm("sms-validation.ftl");

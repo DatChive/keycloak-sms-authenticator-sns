@@ -71,7 +71,7 @@ public class KeycloakSmsMobilenumberRequiredAction implements RequiredActionProv
         } else {
             logger.debug("Either one of two fields wasnt complete, or the first contains an invalid number...");
             Response challenge = context.form()
-                    .setError("Please enter a valid UK telephone number.")
+                    .setError("Please enter a valid telephone number.")
                     .createForm("sms-validation-mobile-number.ftl");
             context.challenge(challenge);
         }
